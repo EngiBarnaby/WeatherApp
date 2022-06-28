@@ -43,12 +43,18 @@ class WeatherListFragment : Fragment() {
     private fun renderData(appState: AppState){
         when(appState){
             is AppState.Error -> {
-                Toast.makeText(getActivity(),"Произошла ошибка при получений данных!",Toast.LENGTH_SHORT).show();
+
+                binding.loading.visibility = View.GONE
+
+                Toast.makeText(activity,"Произошла ошибка при получений данных!",Toast.LENGTH_SHORT).show();
             }
             AppState.Loading -> {
                 binding.loading.visibility = View.VISIBLE
             }
             is AppState.Success -> {
+
+                binding.loading.visibility = View.GONE
+
                 val data = appState.weatherData
 
                 binding.city.text = data.city.name
