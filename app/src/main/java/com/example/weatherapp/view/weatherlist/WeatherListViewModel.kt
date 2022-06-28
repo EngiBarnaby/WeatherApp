@@ -31,12 +31,15 @@ class WeatherListViewModel : ViewModel() {
         liveData.value = AppState.Loading
         val randomNum = (0..3).random()
 
-        if(randomNum == 1){
-            liveData.postValue(AppState.Error(throw IllegalStateException("Ошибка получения данных")))
-        }
-        else{
-            liveData.postValue(AppState.Success(repository.getWeather(55.755826, 37.617299900000035)))
-        }
+        Thread{
+            Thread.sleep(1000L)
+            if(randomNum == 1){
+                liveData.postValue(AppState.Error(IllegalStateException("Ошибка получения данных")))
+            }
+            else{
+                liveData.postValue(AppState.Success(repository.getWeather(55.755826, 37.617299900000035)))
+            }
+        }.start()
     }
 
     private fun isConnection(): Boolean {
