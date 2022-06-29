@@ -2,4 +2,5 @@
 <resources>
     <dimen name="margin_15_dp">15dp</dimen>
     <dimen name="label_size">20sp</dimen>
+    <dimen name="city_name_size">25sp</dimen>
 </resources>

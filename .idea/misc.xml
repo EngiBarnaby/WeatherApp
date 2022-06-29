@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Calni/Desktop/WeatherApp/app/src/main/res/layout/fragment_weather_details.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Calni/Desktop/WeatherApp/app/src/main/res/layout/fragment_weather_list.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Calni/Desktop/WeatherApp/app/src/main/res/layout/weather_list_recycle_item.xml" value="0.14" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.14583333333333334" />
         <entry key="app/src/main/res/layout/fragment_weather_list.xml" value="0.22" />
       </map>
