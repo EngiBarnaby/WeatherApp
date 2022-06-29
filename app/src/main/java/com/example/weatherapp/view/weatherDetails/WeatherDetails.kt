@@ -21,6 +21,15 @@ class WeatherDetails : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val weather = arguments?.getParcelable<Weather>(BUNDLE_WEATHER)
+        if(weather != null){
+            renderData(weather)
+        }
+    }
+
     private fun renderData(weather: Weather){
             binding.city.text = weather.city.name
             binding.temperatureValue.text = weather.temperature.toString()
@@ -29,7 +38,14 @@ class WeatherDetails : Fragment() {
     }
 
     companion object {
-        fun newInstance() = WeatherDetails()
+        const val BUNDLE_WEATHER = "BUNDLE_WEATHER"
+        fun newInstance(weather: Weather) : WeatherDetails {
+            val fragment = WeatherDetails()
+            val bundle = Bundle()
+            bundle.putParcelable(BUNDLE_WEATHER, weather)
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 
 }
