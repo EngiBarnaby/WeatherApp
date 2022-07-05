@@ -1,19 +1,17 @@
 package com.example.weatherapp.view.weatherlist
 
 import android.os.Bundle
-import android.telecom.Call
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentWeatherListBinding
 import com.example.weatherapp.domain.Weather
 import com.example.weatherapp.view.weatherDetails.WeatherDetails
 import com.example.weatherapp.viewmodel.AppState
+import com.google.android.material.snackbar.Snackbar
 
 class WeatherListFragment : Fragment(), onCityClick {
 
@@ -60,7 +58,16 @@ class WeatherListFragment : Fragment(), onCityClick {
 
                 binding.loading.visibility = View.GONE
 
-                Toast.makeText(activity,"Произошла ошибка при получений данных!",Toast.LENGTH_SHORT).show();
+                binding.root.RequestError("Ошибка загрузки", "Повторить"){
+                    if(isWorld){
+                        viewModel.getWeatherListForWorld()
+                        binding.weatherChangeRegionBtn.setImageResource(R.drawable.ic_earth)
+                    }
+                    else{
+                        viewModel.getWeatherListForRussia()
+                        binding.weatherChangeRegionBtn.setImageResource(R.drawable.ic_russia)
+                    }
+                }
             }
             AppState.Loading -> {
                 binding.loading.visibility = View.VISIBLE
@@ -75,6 +82,11 @@ class WeatherListFragment : Fragment(), onCityClick {
             }
         }
     }
+
+    fun View.RequestError(massage: String, btnText : String, block : (v : View) -> Unit){
+        Snackbar.make(this, massage, Snackbar.LENGTH_INDEFINITE).setAction(btnText, block).show()
+    }
+
 
     override fun onCityClick(weather: Weather) {
         requireActivity().supportFragmentManager.beginTransaction().hide(this).add(
