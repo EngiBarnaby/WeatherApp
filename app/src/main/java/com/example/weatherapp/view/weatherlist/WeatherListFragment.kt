@@ -38,12 +38,7 @@ class WeatherListFragment : Fragment(), onCityClick {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(WeatherListViewModel::class.java)
-        viewModel.getData().observe(viewLifecycleOwner, object : Observer<AppState>{
-            override fun onChanged(data: AppState) {
-                renderData(data)
-            }
-        })
-
+        viewModel.getData().observe(viewLifecycleOwner) { data -> renderData(data) }
         viewModel.getWeatherListForRussia()
 
         binding.weatherChangeRegionBtn.setOnClickListener {
@@ -72,9 +67,10 @@ class WeatherListFragment : Fragment(), onCityClick {
             }
             is AppState.SuccessMany -> {
 
-                binding.loading.visibility = View.GONE
-
-                binding.weatherListRecyclerView.adapter = WeatherListAdapter(appState.weatherList, this)
+                with(binding){
+                    loading.visibility = View.GONE
+                    weatherListRecyclerView.adapter = WeatherListAdapter(appState.weatherList, this@WeatherListFragment)
+                }
 
             }
         }

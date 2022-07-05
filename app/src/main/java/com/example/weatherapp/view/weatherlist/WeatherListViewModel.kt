@@ -38,7 +38,7 @@ class WeatherListViewModel : ViewModel() {
 
     fun sendRequest(location : Location){
         liveData.value = AppState.Loading
-        val randomNum = (0..3).random()
+        val randomNum = (0..2).random()
 
         Thread{
             Thread.sleep(1000L)

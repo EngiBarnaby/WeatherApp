@@ -7,9 +7,6 @@ import com.example.weatherapp.domain.getWorldCities
 class RepositoryRemoteImpl : RepositorySingleCity {
 
     override fun getWeather(lat: Double, lon: Double): Weather {
-        Thread{
-            Thread.sleep(300L)
-        }.start()
         return Weather()
     }
 
