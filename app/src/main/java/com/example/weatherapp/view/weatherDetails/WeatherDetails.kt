@@ -10,11 +10,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapp.databinding.FragmentWeatherDetailsBinding
 import com.example.weatherapp.domain.Weather
 import com.example.weatherapp.model.WeatherDTO.WeatherDTO
+import com.example.weatherapp.viewmodel.AppState
+import com.google.android.material.snackbar.Snackbar
 
 class WeatherDetails : Fragment() {
 
-    lateinit var binding : FragmentWeatherDetailsBinding
-    lateinit var viewModel : WeatherDetailsViewModel
+    lateinit var binding: FragmentWeatherDetailsBinding
+    lateinit var viewModel: WeatherDetailsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,18 +30,15 @@ class WeatherDetails : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val weather = arguments?.let{ args ->
+        val weather = arguments?.let { args ->
             args.getParcelable<Weather>(BUNDLE_WEATHER)
         }
 
-        if(weather != null){
-            renderData(weather)
-        }
 
         viewModel = ViewModelProvider(this).get(WeatherDetailsViewModel::class.java)
-        viewModel.weatherData.observe(viewLifecycleOwner){ weatherData ->
+        viewModel.weatherData.observe(viewLifecycleOwner) { appState ->
             if (weather != null) {
-                bindWeatherLocalWithWeatherDTO(weather, weatherData )
+                checkResponse(weather, appState)
             }
         }
 
@@ -49,15 +48,35 @@ class WeatherDetails : Fragment() {
 
     }
 
-    private fun bindWeatherLocalWithWeatherDTO( weather: Weather, weatherDTO: WeatherDTO ){
-        renderData(weather.apply {
-            weather.feelsLike = weatherDTO.fact.feels_like
-            weather.temperature = weatherDTO.fact.temp
-        })
+    private fun checkResponse(weather: Weather, appState: AppState) {
+        when (appState) {
+
+            AppState.Loading -> {
+                binding.loading.visibility = View.VISIBLE
+            }
+
+            is AppState.Error -> {
+                binding.loading.visibility = View.GONE
+                binding.error.visibility = View.VISIBLE
+                Snackbar.make(binding.root, "Ошибка загрузки", Snackbar.LENGTH_INDEFINITE)
+                    .setAction(
+                        "Повторить"
+                    ) { viewModel.getCityWeather(weather.city.lat, weather.city.lon) }.show()
+            }
+
+            is AppState.Success -> {
+                binding.loading.visibility = View.GONE
+                renderData(weather.apply {
+                    weather.feelsLike = appState.weatherData.fact.feels_like
+                    weather.temperature = appState.weatherData.fact.temp
+                })
+            }
+
+        }
     }
 
-    private fun renderData(weather: Weather){
-        with(binding){
+    private fun renderData(weather: Weather) {
+        with(binding) {
             city.text = weather.city.name
             temperatureValue.text = weather.temperature.toString()
             feelsLikeValue.text = weather.feelsLike.toString()
@@ -67,11 +86,11 @@ class WeatherDetails : Fragment() {
 
     companion object {
         const val BUNDLE_WEATHER = "BUNDLE_WEATHER"
-        fun newInstance(weather: Weather) : WeatherDetails {
+        fun newInstance(weather: Weather): WeatherDetails {
             val fragment = WeatherDetails()
-              fragment.arguments = Bundle().apply {
-                  putParcelable(BUNDLE_WEATHER, weather)
-              }
+            fragment.arguments = Bundle().apply {
+                putParcelable(BUNDLE_WEATHER, weather)
+            }
             return fragment
         }
     }

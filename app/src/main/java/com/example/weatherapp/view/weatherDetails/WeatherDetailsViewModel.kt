@@ -11,16 +11,29 @@ import com.example.weatherapp.viewmodel.AppState
 
 class WeatherDetailsViewModel : ViewModel() {
 
-    private val _weatherData = MutableLiveData<WeatherDTO>()
+    private val _weatherData = MutableLiveData<AppState>()
 
-    val weatherData : LiveData<WeatherDTO> = _weatherData
+    val weatherData : LiveData<AppState> = _weatherData
 
     private val repositoryWeatherCity : RepositorySingleCity = RepositoryRemoteImpl()
 
-    fun getCityWeather(lat: Double, lon: Double){
-        repositoryWeatherCity.getWeather(lat, lon){
-            _weatherData.postValue(it)
+    private val onLoaderListener : WeatherLoaderListener = object : WeatherLoaderListener {
+        override fun onLoaded(weatherDTO: WeatherDTO) {
+            _weatherData.postValue(AppState.Success(weatherDTO))
         }
+
+        override fun onError(error: Throwable) {
+            _weatherData.postValue(AppState.Error(error))
+        }
+
+        override fun onLoading() {
+            _weatherData.postValue(AppState.Loading)
+        }
+
+    }
+
+    fun getCityWeather(lat: Double, lon: Double){
+        repositoryWeatherCity.getWeather(lat, lon, onLoaderListener)
     }
 
 

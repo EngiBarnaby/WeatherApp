@@ -1,10 +1,10 @@
 package com.example.weatherapp.model
 
 import com.example.weatherapp.domain.Weather
-import com.example.weatherapp.model.WeatherDTO.WeatherDTO
+import com.example.weatherapp.view.weatherDetails.WeatherLoaderListener
 
 fun interface RepositorySingleCity {
-    fun getWeather(lat : Double, lon : Double, block : (weather : WeatherDTO) -> Unit)
+    fun getWeather(lat : Double, lon : Double, listener : WeatherLoaderListener)
 }
 
 fun interface RepositoryCitiesWeather {
