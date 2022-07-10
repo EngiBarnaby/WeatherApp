@@ -3,6 +3,7 @@ package com.example.weatherapp.network
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.example.weatherapp.BuildConfig
 import com.example.weatherapp.model.WeatherDTO.WeatherDTO
 import com.example.weatherapp.utils.YANDEX_WEATHER_URL
 import com.example.weatherapp.utils.getLines
@@ -23,7 +24,7 @@ object WeatherLoader {
 
         connection = uri.openConnection() as HttpsURLConnection
         connection.readTimeout = 5000
-        connection.addRequestProperty("X-Yandex-API-Key", "5dcd2d84-eaea-452e-8c9d-e5352f762f0d")
+        connection.addRequestProperty("X-Yandex-API-Key", BuildConfig.WEATHER_API_KEY)
 
         Thread{
             listener.onLoading()
