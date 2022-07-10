@@ -28,7 +28,7 @@ class WeatherListFragment : Fragment(), onCityClick {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentWeatherListBinding.inflate(inflater)
         return binding.root
     }

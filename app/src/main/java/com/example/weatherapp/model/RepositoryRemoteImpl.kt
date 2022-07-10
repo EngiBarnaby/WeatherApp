@@ -1,13 +1,15 @@
 package com.example.weatherapp.model
 
-import com.example.weatherapp.domain.Weather
-import com.example.weatherapp.domain.getRussianCities
-import com.example.weatherapp.domain.getWorldCities
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.example.weatherapp.model.WeatherDTO.WeatherDTO
+import com.example.weatherapp.network.WeatherLoader
 
 class RepositoryRemoteImpl : RepositorySingleCity {
 
-    override fun getWeather(lat: Double, lon: Double): Weather {
-        return Weather()
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun getWeather(lat: Double, lon: Double, block: (weather: WeatherDTO) -> Unit) {
+        WeatherLoader.fetchWeatherData(lat, lon, block)
     }
 
 }

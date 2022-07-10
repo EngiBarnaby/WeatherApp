@@ -18,12 +18,6 @@ class WeatherListViewModel : ViewModel() {
     }
 
     private fun choiceRepository(){
-        repositorySingleCity = if(isConnection()){
-            RepositoryRemoteImpl()
-        }else{
-            RepositoryLocalImpl()
-        }
-
         repositoryCitiesWeather = RepositoryLocalImpl()
     }
 
