@@ -36,7 +36,7 @@ class WeatherListViewModel : ViewModel() {
 
         Thread{
             Thread.sleep(1000L)
-            if(randomNum == 1){
+            if(randomNum == 10){
                 liveData.postValue(AppState.Error(IllegalStateException("Ошибка получения данных")))
             }
             else{
