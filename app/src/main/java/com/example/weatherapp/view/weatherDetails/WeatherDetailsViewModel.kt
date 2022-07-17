@@ -4,38 +4,80 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.weatherapp.model.RepositoryRemoteImpl
-import com.example.weatherapp.model.RepositorySingleCity
+import com.example.weatherapp.model.RepositoryDetailWeather
 import com.example.weatherapp.model.WeatherDTO.WeatherDTO
-import com.example.weatherapp.viewmodel.AppState
+import com.example.weatherapp.model.weatherDetailRepositories.*
+import com.example.weatherapp.viewmodel.WeatherDetailState
+import java.io.IOException
 
 class WeatherDetailsViewModel : ViewModel() {
 
-    private val _weatherData = MutableLiveData<AppState>()
+    private val weatherData = MutableLiveData<WeatherDetailState>()
 
-    val weatherData : LiveData<AppState> = _weatherData
+    lateinit var weatherRepository : RepositoryDetailWeather
 
-    private val repositoryWeatherCity : RepositorySingleCity = RepositoryRemoteImpl()
+    fun getWeatherData() : MutableLiveData<WeatherDetailState> {
+        choiceRepository()
+        return weatherData
+    }
 
-    private val onLoaderListener : WeatherLoaderListener = object : WeatherLoaderListener {
-        override fun onLoaded(weatherDTO: WeatherDTO) {
-            _weatherData.postValue(AppState.Success(weatherDTO))
+    private fun choiceRepository(){
+        weatherRepository =when(3){
+            1 -> {
+                RepositoryDetailOkHttpImpl()
+            }
+
+            2 -> {
+                RepositoryDetailLoaderImpl()
+            }
+
+            3 -> {
+                RepositoryDetailRetrofit()
+            }
+
+            else -> {
+                RepositoryDetailLocalImp()
+            }
+        }
+    }
+
+    fun getWeather(lat : Double, lon : Double){
+        choiceRepository()
+        weatherData.value = WeatherDetailState.Loading
+        weatherRepository.getWeather(lat, lon, callBack)
+    }
+
+    private val callBack =  object : WeatherDetailCallback {
+        override fun onResponse(weatherDTO: WeatherDTO) {
+            weatherData.postValue(WeatherDetailState.Success(weatherDTO))
         }
 
-        override fun onError(error: Throwable) {
-            _weatherData.postValue(AppState.Error(error))
-        }
-
-        override fun onLoading() {
-            _weatherData.postValue(AppState.Loading)
+        override fun onError(error: IOException) {
+            weatherData.postValue(WeatherDetailState.Error(error))
         }
 
     }
-
-    fun getCityWeather(lat: Double, lon: Double){
-        repositoryWeatherCity.getWeather(lat, lon, onLoaderListener)
-    }
-
-
-
 }
+
+//    fun getCityWeather(lat: Double, lon: Double){
+//        repositoryWeatherCity.getWeather(lat, lon, onLoaderListener)
+//    }
+
+//    val weatherData : LiveData<AppState> = _weatherData
+
+//private val repositoryWeatherCity : RepositorySingleCity = RepositoryRemoteImpl()
+//
+//private val onLoaderListener : WeatherLoaderListener = object : WeatherLoaderListener {
+//    override fun onLoaded(weatherDTO: WeatherDTO) {
+//        _weatherData.postValue(AppState.Success(weatherDTO))
+//    }
+//
+//    override fun onError(error: Throwable) {
+//        _weatherData.postValue(AppState.Error(error))
+//    }
+//
+//    override fun onLoading() {
+//        _weatherData.postValue(AppState.Loading)
+//    }
+//
+//}

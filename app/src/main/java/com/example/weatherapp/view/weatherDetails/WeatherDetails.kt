@@ -11,6 +11,7 @@ import com.example.weatherapp.databinding.FragmentWeatherDetailsBinding
 import com.example.weatherapp.domain.Weather
 import com.example.weatherapp.model.WeatherDTO.WeatherDTO
 import com.example.weatherapp.viewmodel.AppState
+import com.example.weatherapp.viewmodel.WeatherDetailState
 import com.google.android.material.snackbar.Snackbar
 
 class WeatherDetails : Fragment() {
@@ -36,39 +37,39 @@ class WeatherDetails : Fragment() {
 
 
         viewModel = ViewModelProvider(this).get(WeatherDetailsViewModel::class.java)
-        viewModel.weatherData.observe(viewLifecycleOwner) { appState ->
+        viewModel.getWeatherData().observe(viewLifecycleOwner) { appState ->
             if (weather != null) {
                 checkResponse(weather, appState)
             }
         }
 
         if (weather != null) {
-            viewModel.getCityWeather(weather.city.lat, weather.city.lon)
+            viewModel.getWeather(weather.city.lat, weather.city.lon)
         }
 
     }
 
-    private fun checkResponse(weather: Weather, appState: AppState) {
+    private fun checkResponse(weather: Weather, appState: WeatherDetailState) {
         when (appState) {
 
-            AppState.Loading -> {
+            WeatherDetailState.Loading -> {
                 binding.loading.visibility = View.VISIBLE
             }
 
-            is AppState.Error -> {
+            is WeatherDetailState.Error -> {
                 binding.loading.visibility = View.GONE
                 binding.error.visibility = View.VISIBLE
                 Snackbar.make(binding.root, "Ошибка загрузки", Snackbar.LENGTH_INDEFINITE)
                     .setAction(
                         "Повторить"
-                    ) { viewModel.getCityWeather(weather.city.lat, weather.city.lon) }.show()
+                    ) { viewModel.getWeather(weather.city.lat, weather.city.lon) }.show()
             }
 
-            is AppState.Success -> {
+            is WeatherDetailState.Success -> {
                 binding.loading.visibility = View.GONE
                 renderData(weather.apply {
-                    weather.feelsLike = appState.weatherData.fact.feels_like
-                    weather.temperature = appState.weatherData.fact.temp
+                    weather.feelsLike = appState.weatherDTO.fact.feels_like
+                    weather.temperature = appState.weatherDTO.fact.temp
                 })
             }
 
