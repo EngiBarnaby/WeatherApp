@@ -27,25 +27,32 @@
             android:id="@+id/coordinates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="TextView"
-            android:layout_marginTop="@dimen/margin_15_dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/city"
-            tools:text="lt/ln: 55.755826, 37.617299900000035"
-            />
+            tools:text="lt/ln: 55.755826, 37.617299900000035" />
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="@+id/coordinates"
+            app:layout_constraintStart_toStartOf="@+id/coordinates"
+            app:layout_constraintTop_toBottomOf="@+id/coordinates" />
 
         <TextView
             android:id="@+id/temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:text="@string/temperature"
+            android:textSize="@dimen/label_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/coordinates"
-            android:layout_marginTop="@dimen/margin_15_dp"
-            android:textSize="@dimen/label_size"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/icon" />
 
         <TextView
             android:id="@+id/temperatureValue"

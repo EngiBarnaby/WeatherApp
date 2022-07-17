@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.weatherapp.broadcast.AirPlaneBroadCast
 import com.example.weatherapp.model.RepositoryDetailWeather
 import com.example.weatherapp.model.WeatherDTO.WeatherDTO
 import com.example.weatherapp.model.weatherDetailRepositories.*
@@ -16,13 +17,17 @@ class WeatherDetailsViewModel : ViewModel() {
 
     lateinit var weatherRepository : RepositoryDetailWeather
 
+
     fun getWeatherData() : MutableLiveData<WeatherDetailState> {
         choiceRepository()
         return weatherData
     }
 
     private fun choiceRepository(){
-        weatherRepository =when(3){
+
+        val num = (1..3).random()
+
+        weatherRepository =when(num){
             1 -> {
                 RepositoryDetailOkHttpImpl()
             }
@@ -53,6 +58,7 @@ class WeatherDetailsViewModel : ViewModel() {
         }
 
         override fun onError(error: IOException) {
+            Log.d("Error", "$error")
             weatherData.postValue(WeatherDetailState.Error(error))
         }
 

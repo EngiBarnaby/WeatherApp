@@ -1,5 +1,6 @@
 package com.example.weatherapp.model.weatherDetailRepositories
 
+import android.util.Log
 import com.example.weatherapp.BuildConfig
 import com.example.weatherapp.model.RepositoryDetailWeather
 import com.example.weatherapp.model.WeatherDTO.WeatherDTO
@@ -25,6 +26,7 @@ class RepositoryDetailRetrofit : RepositoryDetailWeather {
                     callBack.onResponse(response.body()!!)
                 }
                 else{
+                    Log.d("Error", "Error 403 $response")
                     callBack.onError(IOException("403 404"))
                 }
             }
