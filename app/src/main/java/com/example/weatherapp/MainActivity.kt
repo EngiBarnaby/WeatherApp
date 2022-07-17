@@ -1,16 +1,17 @@
 package com.example.weatherapp
 
-import android.content.BroadcastReceiver
 import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.weatherapp.broadcast.AirPlaneBroadCast
 import com.example.weatherapp.databinding.ActivityMainBinding
 import com.example.weatherapp.view.timer.TimerFragment
+import com.example.weatherapp.view.weatherDetails.WeatherDetailsViewModel
 import com.example.weatherapp.view.weatherlist.WeatherListFragment
+import androidx.fragment.app.activityViewModels
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,7 +22,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val receiver =AirPlaneBroadCast()
+
+        val receiver =AirPlaneBroadCast(){
+            Log.d("Question", "Не знаю что делать ")
+        }
         registerReceiver(receiver, IntentFilter("android.intent.action.AIRPLANE_MODE"))
 
         if (savedInstanceState == null){
@@ -29,7 +33,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return super.onCreateOptionsMenu(menu)
     }

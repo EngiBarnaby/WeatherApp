@@ -1,7 +1,9 @@
 package com.example.weatherapp.view.weatherDetails
 
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
 import android.os.Bundle
-import android.util.Log
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,20 +12,20 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import coil.ImageLoader
 import coil.decode.SvgDecoder
-import coil.load
 import coil.request.ImageRequest
+import com.example.weatherapp.R
+import com.example.weatherapp.broadcast.AirPlaneBroadCast
 import com.example.weatherapp.databinding.FragmentWeatherDetailsBinding
 import com.example.weatherapp.domain.Weather
 import com.example.weatherapp.model.WeatherDTO.WeatherDTO
-import com.example.weatherapp.viewmodel.AppState
 import com.example.weatherapp.viewmodel.WeatherDetailState
 import com.google.android.material.snackbar.Snackbar
-import com.squareup.picasso.Picasso
 
 class WeatherDetails : Fragment() {
 
     lateinit var binding: FragmentWeatherDetailsBinding
     lateinit var viewModel: WeatherDetailsViewModel
+    lateinit var receiver : BroadcastReceiver
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,7 +43,6 @@ class WeatherDetails : Fragment() {
             args.getParcelable<Weather>(BUNDLE_WEATHER)
         }
 
-
         viewModel = ViewModelProvider(this).get(WeatherDetailsViewModel::class.java)
         viewModel.getWeatherData().observe(viewLifecycleOwner) { appState ->
             if (weather != null) {
@@ -49,11 +50,25 @@ class WeatherDetails : Fragment() {
             }
         }
 
+        receiver = AirPlaneBroadCast(){checkConnection()}
+        requireActivity().registerReceiver(receiver, IntentFilter("android.intent.action.AIRPLANE_MODE"))
+        checkConnection()
+
         if (weather != null) {
             viewModel.getWeather(weather.city.lat, weather.city.lon)
         }
 
     }
+
+
+    private fun checkConnection() {
+        if (Settings.System.getInt(requireActivity().contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) == 0) {
+            viewModel.changeConnectionStatus(true)
+        } else {
+            viewModel.changeConnectionStatus(false)
+        }
+    }
+
 
     private fun checkResponse(weather: Weather, appState: WeatherDetailState) {
         when (appState) {
@@ -87,7 +102,12 @@ class WeatherDetails : Fragment() {
             coordinates.text = "${weather.city.lat}/${weather.city.lon}"
 //            Picasso.get().load("https://kc-media-cdn-live.azureedge.net/cache/6/1/e/5/d/d/61e5ddce35cd9381e11de8f0257a88a302777bcc.jpg")
 //                .into(icon)
-            icon.loadUrl("https://yastatic.net/weather/i/icons/funky/dark/${weatherDTO.fact.icon}.svg")
+            if(viewModel.connectionStatus.value!!){
+                icon.loadUrl("https://yastatic.net/weather/i/icons/funky/dark/${weatherDTO.fact.icon}.svg")
+            }
+            else{
+                icon.setImageResource(R.drawable.ic_baseline_wifi_off_24)
+            }
 
         }
     }

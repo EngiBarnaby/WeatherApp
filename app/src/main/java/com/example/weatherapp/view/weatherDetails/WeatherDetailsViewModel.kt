@@ -14,9 +14,13 @@ import java.io.IOException
 class WeatherDetailsViewModel : ViewModel() {
 
     private val weatherData = MutableLiveData<WeatherDetailState>()
-
+    var connectionStatus = MutableLiveData<Boolean>(true)
     lateinit var weatherRepository : RepositoryDetailWeather
 
+
+    fun changeConnectionStatus(connection : Boolean){
+        connectionStatus.value = connection
+    }
 
     fun getWeatherData() : MutableLiveData<WeatherDetailState> {
         choiceRepository()
@@ -27,22 +31,21 @@ class WeatherDetailsViewModel : ViewModel() {
 
         val num = (1..3).random()
 
-        weatherRepository =when(num){
-            1 -> {
-                RepositoryDetailOkHttpImpl()
+        if(connectionStatus.value!!){
+            weatherRepository =when(num){
+                1 -> {
+                    RepositoryDetailOkHttpImpl()
+                }
+                2 -> {
+                    RepositoryDetailRetrofit()
+                }
+                else -> {
+                    RepositoryDetailLoaderImpl()
+                }
             }
-
-            2 -> {
-                RepositoryDetailLoaderImpl()
-            }
-
-            3 -> {
-                RepositoryDetailRetrofit()
-            }
-
-            else -> {
-                RepositoryDetailLocalImp()
-            }
+        }
+        else{
+            weatherRepository = RepositoryDetailLocalImp()
         }
     }
 
@@ -58,32 +61,8 @@ class WeatherDetailsViewModel : ViewModel() {
         }
 
         override fun onError(error: IOException) {
-            Log.d("Error", "$error")
             weatherData.postValue(WeatherDetailState.Error(error))
         }
 
     }
 }
-
-//    fun getCityWeather(lat: Double, lon: Double){
-//        repositoryWeatherCity.getWeather(lat, lon, onLoaderListener)
-//    }
-
-//    val weatherData : LiveData<AppState> = _weatherData
-
-//private val repositoryWeatherCity : RepositorySingleCity = RepositoryRemoteImpl()
-//
-//private val onLoaderListener : WeatherLoaderListener = object : WeatherLoaderListener {
-//    override fun onLoaded(weatherDTO: WeatherDTO) {
-//        _weatherData.postValue(AppState.Success(weatherDTO))
-//    }
-//
-//    override fun onError(error: Throwable) {
-//        _weatherData.postValue(AppState.Error(error))
-//    }
-//
-//    override fun onLoading() {
-//        _weatherData.postValue(AppState.Loading)
-//    }
-//
-//}
