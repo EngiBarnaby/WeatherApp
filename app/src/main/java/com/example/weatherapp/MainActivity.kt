@@ -28,6 +28,8 @@ class MainActivity : AppCompatActivity() {
 
         detailsViewModel = ViewModelProvider(this).get(WeatherDetailsViewModel::class.java)
 
+        checkConnection()
+
         val receiver =AirPlaneBroadCast(){checkConnection()}
         registerReceiver(receiver, IntentFilter("android.intent.action.AIRPLANE_MODE"))
 
