@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkConnection() {
-        Log.d("Change", "checkConnection: ")
         Connection.connectionStatus =
             Settings.System.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) == 0
     }

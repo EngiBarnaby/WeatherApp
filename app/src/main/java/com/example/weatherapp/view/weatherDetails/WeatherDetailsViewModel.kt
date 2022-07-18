@@ -21,11 +21,6 @@ class WeatherDetailsViewModel : ViewModel() {
     lateinit var weatherRepository : RepositoryDetailWeather
 
 
-//    fun checkConnectionStatus(){
-//        connectionStatus.value = Connection.connectionStatus
-//    }
-
-
     fun getWeatherData() : MutableLiveData<WeatherDetailState> {
         choiceRepository()
         return weatherData
@@ -35,7 +30,6 @@ class WeatherDetailsViewModel : ViewModel() {
 
         val num = (1..3).random()
 
-//        checkConnectionStatus()
 
         if(connectionStatus.value!!){
             weatherRepository =when(num){

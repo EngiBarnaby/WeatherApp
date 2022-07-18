@@ -50,8 +50,9 @@ class WeatherDetails : Fragment() {
                 checkResponse(weather, appState)
             }
         }
+
         viewModel.connectionStatus.observe(viewLifecycleOwner){
-            Log.d("Change", "Is change")
+            Log.d("Change", "Здесь должна быть автоматическая перезагрузка")
         }
 
 
