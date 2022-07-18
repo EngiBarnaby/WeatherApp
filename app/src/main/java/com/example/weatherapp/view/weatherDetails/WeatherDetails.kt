@@ -44,7 +44,7 @@ class WeatherDetails : Fragment() {
             args.getParcelable<Weather>(BUNDLE_WEATHER)
         }
 
-        viewModel = ViewModelProvider(this).get(WeatherDetailsViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(WeatherDetailsViewModel::class.java)
         viewModel.getWeatherData().observe(viewLifecycleOwner) { appState ->
             if (weather != null) {
                 checkResponse(weather, appState)
@@ -52,9 +52,10 @@ class WeatherDetails : Fragment() {
         }
 
         viewModel.connectionStatus.observe(viewLifecycleOwner){
-            Log.d("Change", "Здесь должна быть автоматическая перезагрузка")
+            if (weather != null) {
+                viewModel.getWeather(weather.city.lat, weather.city.lon)
+            }
         }
-
 
         if (weather != null) {
             viewModel.getWeather(weather.city.lat, weather.city.lon)

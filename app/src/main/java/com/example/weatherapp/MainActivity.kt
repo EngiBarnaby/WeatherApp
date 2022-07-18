@@ -13,17 +13,20 @@ import com.example.weatherapp.view.timer.TimerFragment
 import com.example.weatherapp.view.weatherDetails.WeatherDetailsViewModel
 import com.example.weatherapp.view.weatherlist.WeatherListFragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapp.utils.Connection
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding : ActivityMainBinding
+    lateinit var detailsViewModel: WeatherDetailsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        detailsViewModel = ViewModelProvider(this).get(WeatherDetailsViewModel::class.java)
 
         val receiver =AirPlaneBroadCast(){checkConnection()}
         registerReceiver(receiver, IntentFilter("android.intent.action.AIRPLANE_MODE"))
@@ -34,8 +37,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkConnection() {
-        Connection.connectionStatus =
-            Settings.System.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) == 0
+        detailsViewModel.setConnectStatus(Settings.System.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) == 0)
     }
 
 

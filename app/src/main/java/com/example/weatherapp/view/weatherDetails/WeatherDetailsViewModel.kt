@@ -21,6 +21,11 @@ class WeatherDetailsViewModel : ViewModel() {
     lateinit var weatherRepository : RepositoryDetailWeather
 
 
+    fun setConnectStatus(status : Boolean){
+        _connectionStatus.value = status
+    }
+
+
     fun getWeatherData() : MutableLiveData<WeatherDetailState> {
         choiceRepository()
         return weatherData
