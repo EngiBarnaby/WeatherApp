@@ -15,7 +15,7 @@ import java.io.IOException
 class WeatherDetailsViewModel : ViewModel() {
 
     private val weatherData = MutableLiveData<WeatherDetailState>()
-    private var _connectionStatus = MutableLiveData(Connection.connectionStatus)
+    private var _connectionStatus = MutableLiveData<Boolean>()
     var connectionStatus : LiveData<Boolean> = _connectionStatus
 
     lateinit var weatherRepository : RepositoryDetailWeather
