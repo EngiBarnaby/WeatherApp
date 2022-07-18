@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.IntentFilter
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,10 +50,10 @@ class WeatherDetails : Fragment() {
                 checkResponse(weather, appState)
             }
         }
+        viewModel.connectionStatus.observe(viewLifecycleOwner){
+            Log.d("Change", "Is change")
+        }
 
-        receiver = AirPlaneBroadCast(){checkConnection()}
-        requireActivity().registerReceiver(receiver, IntentFilter("android.intent.action.AIRPLANE_MODE"))
-        checkConnection()
 
         if (weather != null) {
             viewModel.getWeather(weather.city.lat, weather.city.lon)
@@ -61,13 +62,13 @@ class WeatherDetails : Fragment() {
     }
 
 
-    private fun checkConnection() {
-        if (Settings.System.getInt(requireActivity().contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) == 0) {
-            viewModel.changeConnectionStatus(true)
-        } else {
-            viewModel.changeConnectionStatus(false)
-        }
-    }
+//    private fun checkConnection() {
+//        if (Settings.System.getInt(requireActivity().contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) == 0) {
+//            viewModel.changeConnectionStatus(true)
+//        } else {
+//            viewModel.changeConnectionStatus(false)
+//        }
+//    }
 
 
     private fun checkResponse(weather: Weather, appState: WeatherDetailState) {

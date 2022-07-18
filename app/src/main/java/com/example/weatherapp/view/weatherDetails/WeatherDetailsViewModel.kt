@@ -8,19 +8,23 @@ import com.example.weatherapp.broadcast.AirPlaneBroadCast
 import com.example.weatherapp.model.RepositoryDetailWeather
 import com.example.weatherapp.model.WeatherDTO.WeatherDTO
 import com.example.weatherapp.model.weatherDetailRepositories.*
+import com.example.weatherapp.utils.Connection
 import com.example.weatherapp.viewmodel.WeatherDetailState
 import java.io.IOException
 
 class WeatherDetailsViewModel : ViewModel() {
 
     private val weatherData = MutableLiveData<WeatherDetailState>()
-    var connectionStatus = MutableLiveData<Boolean>(true)
+    private var _connectionStatus = MutableLiveData(Connection.connectionStatus)
+    var connectionStatus : LiveData<Boolean> = _connectionStatus
+
     lateinit var weatherRepository : RepositoryDetailWeather
 
 
-    fun changeConnectionStatus(connection : Boolean){
-        connectionStatus.value = connection
-    }
+//    fun checkConnectionStatus(){
+//        connectionStatus.value = Connection.connectionStatus
+//    }
+
 
     fun getWeatherData() : MutableLiveData<WeatherDetailState> {
         choiceRepository()
@@ -30,6 +34,8 @@ class WeatherDetailsViewModel : ViewModel() {
     private fun choiceRepository(){
 
         val num = (1..3).random()
+
+//        checkConnectionStatus()
 
         if(connectionStatus.value!!){
             weatherRepository =when(num){

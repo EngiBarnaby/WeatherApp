@@ -3,6 +3,7 @@ package com.example.weatherapp
 import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -12,6 +13,7 @@ import com.example.weatherapp.view.timer.TimerFragment
 import com.example.weatherapp.view.weatherDetails.WeatherDetailsViewModel
 import com.example.weatherapp.view.weatherlist.WeatherListFragment
 import androidx.fragment.app.activityViewModels
+import com.example.weatherapp.utils.Connection
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,14 +25,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        val receiver =AirPlaneBroadCast(){
-            Log.d("Question", "Не знаю что делать ")
-        }
+        val receiver =AirPlaneBroadCast(){checkConnection()}
         registerReceiver(receiver, IntentFilter("android.intent.action.AIRPLANE_MODE"))
 
         if (savedInstanceState == null){
             supportFragmentManager.beginTransaction().replace(R.id.container, WeatherListFragment.newInstance()).commit()
         }
+    }
+
+    private fun checkConnection() {
+        Log.d("Change", "checkConnection: ")
+        Connection.connectionStatus =
+            Settings.System.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) == 0
     }
 
 
