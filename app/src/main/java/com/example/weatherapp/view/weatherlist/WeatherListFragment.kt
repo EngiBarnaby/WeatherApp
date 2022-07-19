@@ -1,6 +1,8 @@
 package com.example.weatherapp.view.weatherlist
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentWeatherListBinding
 import com.example.weatherapp.domain.Weather
+import com.example.weatherapp.utils.IS_WORLD
 import com.example.weatherapp.view.weatherDetails.WeatherDetails
 import com.example.weatherapp.viewmodel.AppState
 import com.google.android.material.snackbar.Snackbar
@@ -19,9 +22,9 @@ class WeatherListFragment : Fragment(), onCityClick {
         fun newInstance() = WeatherListFragment()
     }
 
-    var isWorld = false
+    private var isWorld = false
 
-    lateinit var binding : FragmentWeatherListBinding
+    lateinit var binding: FragmentWeatherListBinding
     lateinit var viewModel: WeatherListViewModel
 
     override fun onCreateView(
@@ -37,33 +40,55 @@ class WeatherListFragment : Fragment(), onCityClick {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(WeatherListViewModel::class.java)
         viewModel.getData().observe(viewLifecycleOwner) { data -> renderData(data) }
-        viewModel.getWeatherListForRussia()
+//        viewModel.getWeatherListForRussia()
+        showListOfTown()
 
-        binding.weatherChangeRegionBtn.setOnClickListener {
-            isWorld = !isWorld
-            if(isWorld){
-                viewModel.getWeatherListForWorld()
-                binding.weatherChangeRegionBtn.setImageResource(R.drawable.ic_earth)
-            }
-            else{
-                viewModel.getWeatherListForRussia()
-                binding.weatherChangeRegionBtn.setImageResource(R.drawable.ic_russia)
-            }
+        binding.weatherChangeRegionBtn.setOnClickListener { changeListOfTown() }
+    }
+
+    private fun changeListOfTown() {
+        isWorld = !isWorld
+        if (isWorld) {
+            viewModel.getWeatherListForWorld()
+            binding.weatherChangeRegionBtn.setImageResource(R.drawable.ic_earth)
+        } else {
+            viewModel.getWeatherListForRussia()
+            binding.weatherChangeRegionBtn.setImageResource(R.drawable.ic_russia)
+        }
+        saveWorldState(isWorld)
+    }
+
+    private fun showListOfTown() {
+        activity?.let {
+            isWorld = it.getPreferences(Context.MODE_PRIVATE).getBoolean(IS_WORLD, true)
+        }
+        if (isWorld) {
+            viewModel.getWeatherListForWorld()
+            binding.weatherChangeRegionBtn.setImageResource(R.drawable.ic_earth)
+        } else {
+            viewModel.getWeatherListForRussia()
+            binding.weatherChangeRegionBtn.setImageResource(R.drawable.ic_russia)
         }
     }
 
-    private fun renderData(appState: AppState){
-        when(appState){
+    private fun saveWorldState(isWorld: Boolean) {
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        val editor = sharedPref!!.edit()
+        editor.putBoolean(IS_WORLD, isWorld)
+        editor.apply()
+    }
+
+    private fun renderData(appState: AppState) {
+        when (appState) {
             is AppState.Error -> {
 
                 binding.loading.visibility = View.GONE
 
-                binding.root.RequestError("Ошибка загрузки", "Повторить"){
-                    if(isWorld){
+                binding.root.RequestError("Ошибка загрузки", "Повторить") {
+                    if (isWorld) {
                         viewModel.getWeatherListForWorld()
                         binding.weatherChangeRegionBtn.setImageResource(R.drawable.ic_earth)
-                    }
-                    else{
+                    } else {
                         viewModel.getWeatherListForRussia()
                         binding.weatherChangeRegionBtn.setImageResource(R.drawable.ic_russia)
                     }
@@ -74,16 +99,18 @@ class WeatherListFragment : Fragment(), onCityClick {
             }
             is AppState.SuccessMany -> {
 
-                with(binding){
+                with(binding) {
                     loading.visibility = View.GONE
-                    weatherListRecyclerView.adapter = WeatherListAdapter(appState.weatherList, this@WeatherListFragment)
+                    weatherListRecyclerView.adapter =
+                        WeatherListAdapter(appState.weatherList, this@WeatherListFragment)
                 }
 
             }
+            else -> {}
         }
     }
 
-    fun View.RequestError(massage: String, btnText : String, block : (v : View) -> Unit){
+    fun View.RequestError(massage: String, btnText: String, block: (v: View) -> Unit) {
         Snackbar.make(this, massage, Snackbar.LENGTH_INDEFINITE).setAction(btnText, block).show()
     }
 
