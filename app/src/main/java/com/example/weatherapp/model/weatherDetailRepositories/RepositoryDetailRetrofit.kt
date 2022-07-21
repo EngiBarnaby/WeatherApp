@@ -28,7 +28,6 @@ class RepositoryDetailRetrofit : RepositoryDetailWeather {
                     callBack.onResponse(bindDTOWithCity(response.body()!!, city))
                 }
                 else{
-                    Log.d("Error", "Error 403 $response")
                     callBack.onError(IOException("403 404"))
                 }
             }

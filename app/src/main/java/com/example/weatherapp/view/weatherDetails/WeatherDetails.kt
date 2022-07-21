@@ -83,7 +83,6 @@ class WeatherDetails : Fragment() {
             }
 
             is WeatherDetailState.Error -> {
-                Log.d("Error", "$appState.error")
                 binding.loading.visibility = View.GONE
                 binding.error.visibility = View.VISIBLE
                 Snackbar.make(binding.root, "Ошибка загрузки", Snackbar.LENGTH_INDEFINITE)
@@ -94,6 +93,7 @@ class WeatherDetails : Fragment() {
 
             is WeatherDetailState.Success -> {
                 binding.loading.visibility = View.GONE
+                binding.error.visibility = View.GONE
                 renderData(appState.weather)
             }
 

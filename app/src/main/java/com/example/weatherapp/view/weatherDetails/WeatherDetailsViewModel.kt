@@ -40,7 +40,7 @@ class WeatherDetailsViewModel : ViewModel() {
 
 
         if(connectionStatus.value!!){
-            weatherRepository =when(1){
+            weatherRepository =when(num){
                 1 -> {
                     RepositoryDetailOkHttpImpl()
                 }
