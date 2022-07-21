@@ -1,6 +1,7 @@
 package com.example.weatherapp
 
 import android.app.Application
+import android.util.Log
 import androidx.room.Room
 import com.example.weatherapp.database.WeatherHistoryDatabase
 import com.example.weatherapp.utils.DB_WEATHER

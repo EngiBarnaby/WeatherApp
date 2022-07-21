@@ -15,6 +15,7 @@ import com.example.weatherapp.view.weatherlist.WeatherListFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapp.utils.Connection
+import com.example.weatherapp.view.weatherHistoryList.WeatherHistoryFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -59,6 +60,17 @@ class MainActivity : AppCompatActivity() {
                 }
                 true
             }
+
+            R.id.menu_history -> {
+                supportFragmentManager.apply {
+                    beginTransaction()
+                        .replace(R.id.container, WeatherHistoryFragment())
+                        .addToBackStack("")
+                        .commitAllowingStateLoss()
+                }
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

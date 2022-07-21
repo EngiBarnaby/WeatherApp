@@ -26,7 +26,7 @@ fun interface RepositoryCitiesWeather {
 }
 
 interface ListWeatherCallback{
-    fun onResponse(weather: List<Weather>)
+    fun onResponse(weatherList: List<Weather>)
     fun onFailure(e: IOException)
 }
 

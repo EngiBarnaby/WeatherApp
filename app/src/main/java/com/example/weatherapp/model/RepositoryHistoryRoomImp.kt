@@ -27,16 +27,20 @@ class RepositoryHistoryRoomImp : RepositoryDetailWeather, RepositoryAllWeatherFr
     }
 
     override fun getAllWeather(callback: ListWeatherCallback) {
-        callback.onResponse(convertHistoryEntityToWeather(
-            MyApp
-                .getWeatherHistoryDatabase()
-                .weatherHistoryDAO()
-                .getAllWeatherHistory()
-        ))
+        Thread{
+            callback.onResponse(convertHistoryEntityToWeather(
+                MyApp
+                    .getWeatherHistoryDatabase()
+                    .weatherHistoryDAO()
+                    .getAllWeatherHistory()
+            ))
+        }.start()
     }
 
     override fun addWeather(weather: Weather) {
-        MyApp.getWeatherHistoryDatabase().weatherHistoryDAO().insert(convertWeatherToEntity(weather))
+        Thread{
+            MyApp.getWeatherHistoryDatabase().weatherHistoryDAO().insert(convertWeatherToEntity(weather))
+        }.start()
     }
 
     private fun convertWeatherToEntity(weather: Weather): WeatherHistoryEntity {
