@@ -9,13 +9,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentWeatherHistoryBinding
 import com.example.weatherapp.domain.Weather
+import com.example.weatherapp.view.weatherDetails.WeatherDetails
 import com.example.weatherapp.view.weatherlist.WeatherListAdapter
 import com.example.weatherapp.view.weatherlist.WeatherListFragment
+import com.example.weatherapp.view.weatherlist.onCityClick
 import com.example.weatherapp.viewmodel.AppState
 import com.example.weatherapp.viewmodel.WeatherHistoryAppState
 import com.google.android.material.snackbar.Snackbar
 
-class WeatherHistoryFragment : Fragment() {
+class WeatherHistoryFragment : Fragment(), onCityClick {
 
     lateinit var binding : FragmentWeatherHistoryBinding
     lateinit var viewModel: WeatherHistoryListViewModel
@@ -56,7 +58,7 @@ class WeatherHistoryFragment : Fragment() {
                 with(binding) {
                     loading.visibility = View.GONE
                     weatherHistoryList.adapter =
-                        HistoryAdapter(appState.weatherList)
+                        HistoryAdapter(appState.weatherList, this@WeatherHistoryFragment)
                 }
 
             }
@@ -70,5 +72,11 @@ class WeatherHistoryFragment : Fragment() {
 
     companion object {
         fun newInstance() = WeatherListFragment()
+    }
+
+    override fun onCityClick(weather: Weather) {
+        requireActivity().supportFragmentManager.beginTransaction().hide(this).add(
+            R.id.container, WeatherDetails.newInstance(weather, true)
+        ).addToBackStack("").commit()
     }
 }

@@ -11,13 +11,15 @@ import com.example.weatherapp.view.weatherDetails.WeatherLoaderListener
 class RepositoryHistoryRoomImp : RepositoryDetailWeather, RepositoryAllWeatherFromRoom,  RepositoryWeatherSave {
 
     override fun getWeather(city: City, callback: WeatherDetailCallback) {
-        callback.onResponse(MyApp
-            .getWeatherHistoryDatabase()
-            .weatherHistoryDAO()
-            .getWeatherHistoryByLocation(city.lat, city.lon).let {
-                convertHistoryEntityToWeather(it).last()
-            }
-        )
+        Thread{
+            callback.onResponse(MyApp
+                .getWeatherHistoryDatabase()
+                .weatherHistoryDAO()
+                .getWeatherHistoryByLocation(city.lat, city.lon).let {
+                    convertHistoryEntityToWeather(it).last()
+                }
+            )
+        }.start()
     }
 
     private fun convertHistoryEntityToWeather(entityList: List<WeatherHistoryEntity>): List<Weather> {

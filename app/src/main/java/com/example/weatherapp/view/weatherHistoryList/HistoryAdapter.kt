@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.databinding.WeatherListRecycleItemBinding
 import com.example.weatherapp.domain.Weather
+import com.example.weatherapp.view.weatherlist.onCityClick
 
-class HistoryAdapter(private val weatherData : List<Weather>) : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
+class HistoryAdapter(private val weatherData : List<Weather>,private val callback : onCityClick) : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
@@ -28,6 +29,9 @@ class HistoryAdapter(private val weatherData : List<Weather>) : RecyclerView.Ada
             val binding = WeatherListRecycleItemBinding.bind(itemView)
             with(binding){
                 cityName.text = weather.city.name
+                root.setOnClickListener {
+                    callback.onCityClick(weather)
+                }
             }
         }
     }

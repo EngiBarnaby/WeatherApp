@@ -21,7 +21,7 @@ class WeatherDetailsViewModel : ViewModel() {
     var connectionStatus : LiveData<Boolean> = _connectionStatus
 
     lateinit var weatherRepository : RepositoryDetailWeather
-    lateinit var weatherSaveRepository : RepositoryWeatherSave
+    var weatherSaveRepository  = RepositoryHistoryRoomImp()
 
 
     fun setConnectStatus(status : Boolean){
@@ -40,7 +40,7 @@ class WeatherDetailsViewModel : ViewModel() {
 
 
         if(connectionStatus.value!!){
-            weatherRepository =when(2){
+            weatherRepository =when(1){
                 1 -> {
                     RepositoryDetailOkHttpImpl()
                 }
@@ -52,7 +52,7 @@ class WeatherDetailsViewModel : ViewModel() {
                 }
             }
 
-            weatherSaveRepository = RepositoryHistoryRoomImp()
+//            weatherSaveRepository = RepositoryHistoryRoomImp()
         }
         else{
             weatherRepository = RepositoryDetailLocalImp()
@@ -63,6 +63,20 @@ class WeatherDetailsViewModel : ViewModel() {
         choiceRepository()
         weatherData.value = WeatherDetailState.Loading
         weatherRepository.getWeather(city, callBack)
+    }
+
+    fun getWeatherFromDB(city : City){
+        weatherData.value = WeatherDetailState.Loading
+        weatherSaveRepository.getWeather(city, callbackFromDB)
+    }
+
+    private val callbackFromDB = object : WeatherDetailCallback {
+        override fun onResponse(weather: Weather) {
+            weatherData.postValue(WeatherDetailState.Success(weather))
+        }
+        override fun onError(error: IOException) {
+            weatherData.postValue(WeatherDetailState.Error(error))
+        }
     }
 
     private val callBack =  object : WeatherDetailCallback {

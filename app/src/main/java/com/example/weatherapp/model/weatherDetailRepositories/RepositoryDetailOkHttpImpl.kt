@@ -1,5 +1,6 @@
 package com.example.weatherapp.model.weatherDetailRepositories
 
+import android.util.Log
 import com.example.weatherapp.BuildConfig
 import com.example.weatherapp.domain.City
 import com.example.weatherapp.model.RepositoryDetailWeather
