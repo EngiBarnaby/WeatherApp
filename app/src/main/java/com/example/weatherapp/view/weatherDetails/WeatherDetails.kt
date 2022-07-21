@@ -27,7 +27,6 @@ class WeatherDetails : Fragment() {
 
     lateinit var binding: FragmentWeatherDetailsBinding
     lateinit var viewModel: WeatherDetailsViewModel
-    var fromDatabase : Boolean? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,9 +44,9 @@ class WeatherDetails : Fragment() {
             args.getParcelable<Weather>(BUNDLE_WEATHER)
         }
 
-        fromDatabase = arguments?.let { args ->
-            args.getBoolean(FROM_DB)
-        }
+//        fromDatabase = arguments?.let { args ->
+//            args.getBoolean(FROM_DB)
+//        }
 
 
 
@@ -59,17 +58,17 @@ class WeatherDetails : Fragment() {
         }
 
         viewModel.connectionStatus.observe(viewLifecycleOwner){
-            if (weather != null && fromDatabase == false) {
+            if (weather != null) {
                 viewModel.getWeather(weather.city)
             }
         }
-
-        if (weather != null && fromDatabase == false) {
-            viewModel.getWeather(weather.city)
-        }
-        else{
-            weather?.city?.let { viewModel.getWeatherFromDB(it) }
-        }
+//
+//        if (weather != null && fromDatabase == false) {
+//            viewModel.getWeather(weather.city)
+//        }
+//        else{
+//            weather?.city?.let { viewModel.getWeatherFromDB(it) }
+//        }
 
     }
 
@@ -85,6 +84,7 @@ class WeatherDetails : Fragment() {
             is WeatherDetailState.Error -> {
                 binding.loading.visibility = View.GONE
                 binding.error.visibility = View.VISIBLE
+                Log.d("Error", "${appState.error}")
                 Snackbar.make(binding.root, "Ошибка загрузки", Snackbar.LENGTH_INDEFINITE)
                     .setAction(
                         "Повторить"
@@ -109,9 +109,6 @@ class WeatherDetails : Fragment() {
 //            Picasso.get().load("https://kc-media-cdn-live.azureedge.net/cache/6/1/e/5/d/d/61e5ddce35cd9381e11de8f0257a88a302777bcc.jpg")
 //                .into(icon)
             if(viewModel.connectionStatus.value!! ){
-                icon.loadUrl("https://yastatic.net/weather/i/icons/funky/dark/${weather.icon}.svg")
-            }
-            else if(viewModel.connectionStatus.value!! && fromDatabase == true){
                 icon.loadUrl("https://yastatic.net/weather/i/icons/funky/dark/${weather.icon}.svg")
             }
             else{
@@ -139,11 +136,10 @@ class WeatherDetails : Fragment() {
 
     companion object {
         const val BUNDLE_WEATHER = "BUNDLE_WEATHER"
-        fun newInstance(weather: Weather, fromDatabase : Boolean): WeatherDetails {
+        fun newInstance(weather: Weather): WeatherDetails {
             val fragment = WeatherDetails()
             fragment.arguments = Bundle().apply {
                 putParcelable(BUNDLE_WEATHER, weather)
-                putBoolean(FROM_DB, fromDatabase)
             }
             return fragment
         }
