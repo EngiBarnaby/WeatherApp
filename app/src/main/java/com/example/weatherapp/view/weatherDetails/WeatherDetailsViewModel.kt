@@ -4,11 +4,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.weatherapp.broadcast.AirPlaneBroadCast
+import com.example.weatherapp.domain.City
+import com.example.weatherapp.domain.Weather
 import com.example.weatherapp.model.RepositoryDetailWeather
+import com.example.weatherapp.model.RepositoryHistoryRoomImp
+import com.example.weatherapp.model.RepositoryWeatherSave
 import com.example.weatherapp.model.WeatherDTO.WeatherDTO
 import com.example.weatherapp.model.weatherDetailRepositories.*
-import com.example.weatherapp.utils.Connection
 import com.example.weatherapp.viewmodel.WeatherDetailState
 import java.io.IOException
 
@@ -19,6 +21,7 @@ class WeatherDetailsViewModel : ViewModel() {
     var connectionStatus : LiveData<Boolean> = _connectionStatus
 
     lateinit var weatherRepository : RepositoryDetailWeather
+    lateinit var weatherSaveRepository : RepositoryWeatherSave
 
 
     fun setConnectStatus(status : Boolean){
@@ -48,21 +51,26 @@ class WeatherDetailsViewModel : ViewModel() {
                     RepositoryDetailLoaderImpl()
                 }
             }
+
+            weatherSaveRepository = RepositoryHistoryRoomImp()
         }
         else{
             weatherRepository = RepositoryDetailLocalImp()
         }
     }
 
-    fun getWeather(lat : Double, lon : Double){
+    fun getWeather(city : City){
         choiceRepository()
         weatherData.value = WeatherDetailState.Loading
-        weatherRepository.getWeather(lat, lon, callBack)
+        weatherRepository.getWeather(city, callBack)
     }
 
     private val callBack =  object : WeatherDetailCallback {
-        override fun onResponse(weatherDTO: WeatherDTO) {
-            weatherData.postValue(WeatherDetailState.Success(weatherDTO))
+        override fun onResponse(weather: Weather) {
+            if (connectionStatus.value!!){
+                weatherSaveRepository.addWeather(weather)
+            }
+            weatherData.postValue(WeatherDetailState.Success(weather))
         }
 
         override fun onError(error: IOException) {

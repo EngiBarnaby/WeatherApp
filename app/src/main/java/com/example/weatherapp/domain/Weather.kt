@@ -5,9 +5,10 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Weather (
-    val city : City = getMoscow(),
+    val city : City,
     var temperature : Int = 42,
-    var feelsLike : Int = 13
+    var feelsLike : Int = 13,
+    var icon: String="ovc_-ra"
 ) :Parcelable
 
 

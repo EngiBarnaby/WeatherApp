@@ -53,24 +53,16 @@ class WeatherDetails : Fragment() {
 
         viewModel.connectionStatus.observe(viewLifecycleOwner){
             if (weather != null) {
-                viewModel.getWeather(weather.city.lat, weather.city.lon)
+                viewModel.getWeather(weather.city)
             }
         }
 
         if (weather != null) {
-            viewModel.getWeather(weather.city.lat, weather.city.lon)
+            viewModel.getWeather(weather.city)
         }
 
     }
 
-
-//    private fun checkConnection() {
-//        if (Settings.System.getInt(requireActivity().contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) == 0) {
-//            viewModel.changeConnectionStatus(true)
-//        } else {
-//            viewModel.changeConnectionStatus(false)
-//        }
-//    }
 
 
     private fun checkResponse(weather: Weather, appState: WeatherDetailState) {
@@ -86,27 +78,27 @@ class WeatherDetails : Fragment() {
                 Snackbar.make(binding.root, "Ошибка загрузки", Snackbar.LENGTH_INDEFINITE)
                     .setAction(
                         "Повторить"
-                    ) { viewModel.getWeather(weather.city.lat, weather.city.lon) }.show()
+                    ) { viewModel.getWeather(weather.city) }.show()
             }
 
             is WeatherDetailState.Success -> {
                 binding.loading.visibility = View.GONE
-                renderData(weather, appState.weatherDTO)
+                renderData(appState.weather)
             }
 
         }
     }
 
-    private fun renderData(weather: Weather ,weatherDTO : WeatherDTO) {
+    private fun renderData(weather: Weather) {
         with(binding) {
             city.text = weather.city.name
-            temperatureValue.text = weatherDTO.fact.temp.toString()
-            feelsLikeValue.text = weatherDTO.fact.feels_like.toString()
+            temperatureValue.text = weather.temperature.toString()
+            feelsLikeValue.text = weather.feelsLike.toString()
             coordinates.text = "${weather.city.lat}/${weather.city.lon}"
 //            Picasso.get().load("https://kc-media-cdn-live.azureedge.net/cache/6/1/e/5/d/d/61e5ddce35cd9381e11de8f0257a88a302777bcc.jpg")
 //                .into(icon)
             if(viewModel.connectionStatus.value!!){
-                icon.loadUrl("https://yastatic.net/weather/i/icons/funky/dark/${weatherDTO.fact.icon}.svg")
+                icon.loadUrl("https://yastatic.net/weather/i/icons/funky/dark/${weather.icon}.svg")
             }
             else{
                 icon.setImageResource(R.drawable.ic_baseline_wifi_off_24)
