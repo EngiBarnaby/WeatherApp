@@ -76,7 +76,7 @@ class WeatherHistoryFragment : Fragment(), onCityClick {
 
     override fun onCityClick(weather: Weather) {
         requireActivity().supportFragmentManager.beginTransaction().hide(this).add(
-            R.id.container, WeatherDetails.newInstance(weather)
+            R.id.container, WeatherDetails.newInstance(weather, true)
         ).addToBackStack("").commit()
     }
 }

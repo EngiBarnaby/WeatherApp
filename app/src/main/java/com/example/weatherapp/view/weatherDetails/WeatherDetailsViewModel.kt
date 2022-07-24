@@ -1,6 +1,5 @@
 package com.example.weatherapp.view.weatherDetails
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,13 +7,14 @@ import com.example.weatherapp.domain.City
 import com.example.weatherapp.domain.Weather
 import com.example.weatherapp.model.RepositoryDetailWeather
 import com.example.weatherapp.model.RepositoryHistoryRoomImp
-import com.example.weatherapp.model.RepositoryWeatherSave
-import com.example.weatherapp.model.WeatherDTO.WeatherDTO
 import com.example.weatherapp.model.weatherDetailRepositories.*
 import com.example.weatherapp.viewmodel.WeatherDetailState
 import java.io.IOException
 
-class WeatherDetailsViewModel : ViewModel() {
+class WeatherDetailsViewModel() : ViewModel() {
+
+
+    var fromDataBase: Boolean? = null
 
     private val weatherData = MutableLiveData<WeatherDetailState>()
     private var _connectionStatus = MutableLiveData<Boolean>()
@@ -40,7 +40,7 @@ class WeatherDetailsViewModel : ViewModel() {
 
 
         if(connectionStatus.value!!){
-            weatherRepository =when(2){
+            weatherRepository =when(num){
                 1 -> {
                     RepositoryDetailOkHttpImpl()
                 }
@@ -60,15 +60,17 @@ class WeatherDetailsViewModel : ViewModel() {
     }
 
     fun getWeather(city : City){
-        choiceRepository()
-        weatherData.value = WeatherDetailState.Loading
-        weatherRepository.getWeather(city, callBack)
+        if(!fromDataBase!!){
+            choiceRepository()
+            weatherData.value = WeatherDetailState.Loading
+            weatherRepository.getWeather(city, callBack)
+        }
+        else{
+            weatherData.value = WeatherDetailState.Loading
+            weatherSaveRepository.getWeather(city, callbackFromDB)
+        }
     }
 
-    fun getWeatherFromDB(city : City){
-        weatherData.value = WeatherDetailState.Loading
-        weatherSaveRepository.getWeather(city, callbackFromDB)
-    }
 
     private val callbackFromDB = object : WeatherDetailCallback {
         override fun onResponse(weather: Weather) {
