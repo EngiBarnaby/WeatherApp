@@ -4,18 +4,15 @@ import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.example.weatherapp.broadcast.AirPlaneBroadCast
 import com.example.weatherapp.databinding.ActivityMainBinding
 import com.example.weatherapp.view.timer.TimerFragment
-import com.example.weatherapp.view.weatherDetails.WeatherDetailsViewModel
+import com.example.weatherapp.view.weatherdetails.WeatherDetailsViewModel
 import com.example.weatherapp.view.weatherlist.WeatherListFragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import com.example.weatherapp.utils.Connection
-import com.example.weatherapp.view.weatherHistoryList.WeatherHistoryFragment
+import com.example.weatherapp.view.weatherhistorylist.WeatherHistoryFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -63,10 +60,13 @@ class MainActivity : AppCompatActivity() {
 
             R.id.menu_history -> {
                 supportFragmentManager.apply {
-                    beginTransaction()
-                        .replace(R.id.container, WeatherHistoryFragment())
-                        .addToBackStack("")
-                        .commitAllowingStateLoss()
+                    val historyFragment = supportFragmentManager.findFragmentByTag("history-list")
+                    if(historyFragment == null){
+                        beginTransaction()
+                            .replace(R.id.container, WeatherHistoryFragment(), "history-list")
+                            .addToBackStack("")
+                            .commit()
+                    }
                 }
                 true
             }

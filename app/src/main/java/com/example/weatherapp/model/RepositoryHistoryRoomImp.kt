@@ -1,12 +1,10 @@
 package com.example.weatherapp.model
 
 import com.example.weatherapp.MyApp
-import com.example.weatherapp.database.WeatherHistoryDatabase
 import com.example.weatherapp.database.WeatherHistoryEntity
 import com.example.weatherapp.domain.City
 import com.example.weatherapp.domain.Weather
 import com.example.weatherapp.model.weatherDetailRepositories.WeatherDetailCallback
-import com.example.weatherapp.view.weatherDetails.WeatherLoaderListener
 
 class RepositoryHistoryRoomImp : RepositoryDetailWeather, RepositoryAllWeatherFromRoom,  RepositoryWeatherSave {
 

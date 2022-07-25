@@ -1,11 +1,9 @@
-package com.example.weatherapp.view.weatherHistoryList
+package com.example.weatherapp.view.weatherhistorylist
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.weatherapp.domain.Weather
 import com.example.weatherapp.model.ListWeatherCallback
-import com.example.weatherapp.model.Location
 import com.example.weatherapp.model.RepositoryAllWeatherFromRoom
 import com.example.weatherapp.model.RepositoryHistoryRoomImp
 import com.example.weatherapp.viewmodel.WeatherHistoryAppState

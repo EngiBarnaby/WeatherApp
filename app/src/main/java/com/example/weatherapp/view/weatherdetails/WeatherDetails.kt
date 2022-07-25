@@ -1,9 +1,6 @@
-package com.example.weatherapp.view.weatherDetails
+package com.example.weatherapp.view.weatherdetails
 
-import android.content.BroadcastReceiver
-import android.content.IntentFilter
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,10 +12,8 @@ import coil.ImageLoader
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.example.weatherapp.R
-import com.example.weatherapp.broadcast.AirPlaneBroadCast
 import com.example.weatherapp.databinding.FragmentWeatherDetailsBinding
 import com.example.weatherapp.domain.Weather
-import com.example.weatherapp.model.WeatherDTO.WeatherDTO
 import com.example.weatherapp.utils.FROM_DB
 import com.example.weatherapp.viewmodel.WeatherDetailState
 import com.google.android.material.snackbar.Snackbar

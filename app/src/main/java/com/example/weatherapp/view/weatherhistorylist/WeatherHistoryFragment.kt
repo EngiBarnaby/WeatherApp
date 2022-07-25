@@ -1,4 +1,4 @@
-package com.example.weatherapp.view.weatherHistoryList
+package com.example.weatherapp.view.weatherhistorylist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,11 +9,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentWeatherHistoryBinding
 import com.example.weatherapp.domain.Weather
-import com.example.weatherapp.view.weatherDetails.WeatherDetails
-import com.example.weatherapp.view.weatherlist.WeatherListAdapter
+import com.example.weatherapp.view.weatherdetails.WeatherDetails
 import com.example.weatherapp.view.weatherlist.WeatherListFragment
 import com.example.weatherapp.view.weatherlist.onCityClick
-import com.example.weatherapp.viewmodel.AppState
 import com.example.weatherapp.viewmodel.WeatherHistoryAppState
 import com.google.android.material.snackbar.Snackbar
 

@@ -1,14 +1,13 @@
 package com.example.weatherapp.network
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.weatherapp.BuildConfig
 import com.example.weatherapp.model.WeatherDTO.WeatherDTO
 import com.example.weatherapp.utils.YANDEX_HEADER
 import com.example.weatherapp.utils.YANDEX_WEATHER_URL
 import com.example.weatherapp.utils.getLines
-import com.example.weatherapp.view.weatherDetails.WeatherLoaderListener
+import com.example.weatherapp.view.weatherdetails.WeatherLoaderListener
 import com.google.gson.Gson
 import java.io.BufferedReader
 import java.io.InputStreamReader
