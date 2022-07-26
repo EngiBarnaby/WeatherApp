@@ -4,6 +4,7 @@ import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.example.weatherapp.broadcast.AirPlaneBroadCast
@@ -12,6 +13,7 @@ import com.example.weatherapp.view.timer.TimerFragment
 import com.example.weatherapp.view.weatherdetails.WeatherDetailsViewModel
 import com.example.weatherapp.view.weatherlist.WeatherListFragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.weatherapp.view.contacts.ContactsListFragment
 import com.example.weatherapp.view.weatherhistorylist.WeatherHistoryFragment
 
 class MainActivity : AppCompatActivity() {
@@ -50,20 +52,64 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.menu_threads -> {
                 supportFragmentManager.apply {
-                    beginTransaction()
-                        .replace(R.id.container, TimerFragment())
-                        .addToBackStack("")
-                        .commitAllowingStateLoss()
+                    val timerFragment = supportFragmentManager.findFragmentByTag("timer_fragment")
+                    val fragmentTransaction = supportFragmentManager.beginTransaction()
+                    if(timerFragment == null){
+                        beginTransaction()
+                            .replace(R.id.container, TimerFragment(), "timer_fragment")
+                            .addToBackStack("")
+                            .commitAllowingStateLoss()
+                    }
+                    else{
+                        fragmentTransaction.remove(timerFragment).commit()
+                        supportFragmentManager.popBackStack()
+                        beginTransaction()
+                            .replace(R.id.container, TimerFragment(), "timer_fragment")
+                            .addToBackStack("")
+                            .commit()
+                    }
                 }
                 true
             }
 
             R.id.menu_history -> {
                 supportFragmentManager.apply {
-                    val historyFragment = supportFragmentManager.findFragmentByTag("history-list")
+                    val historyFragment = supportFragmentManager.findFragmentByTag("history_list")
+                    val fragmentTransaction = supportFragmentManager.beginTransaction()
                     if(historyFragment == null){
                         beginTransaction()
-                            .replace(R.id.container, WeatherHistoryFragment(), "history-list")
+                            .replace(R.id.container, WeatherHistoryFragment(), "history_list")
+                            .addToBackStack("")
+                            .commit()
+                    }
+                    else{
+                        fragmentTransaction.remove(historyFragment).commit()
+                        supportFragmentManager.popBackStack()
+                        beginTransaction()
+                            .replace(R.id.container, WeatherHistoryFragment(), "history_list")
+                            .addToBackStack("")
+                            .commit()
+                    }
+                }
+                true
+            }
+
+            R.id.menu_contacts -> {
+                supportFragmentManager.apply {
+                    val contactsFragment = supportFragmentManager.findFragmentByTag("contacts_fragment")
+                    val fragmentTransaction = supportFragmentManager.beginTransaction()
+
+                    if(contactsFragment == null){
+                        beginTransaction()
+                            .replace(R.id.container, ContactsListFragment(), "contacts_fragment")
+                            .addToBackStack("")
+                            .commit()
+                    }
+                    else{
+                        fragmentTransaction.remove(contactsFragment).commit()
+                        supportFragmentManager.popBackStack()
+                        beginTransaction()
+                            .replace(R.id.container, ContactsListFragment(), "contacts_fragment")
                             .addToBackStack("")
                             .commit()
                     }
