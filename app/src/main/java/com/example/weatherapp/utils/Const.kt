@@ -11,3 +11,4 @@ const val YANDEX_BASE_URL = "https://api.weather.yandex.ru"
 const val IS_WORLD = "IS_WORLD"
 const val DB_WEATHER = "DB_WEATHER"
 const val FROM_DB = "FROM_DB"
+const val REQUEST_CODE_READ_CONTACTS = 999
